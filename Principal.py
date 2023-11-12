@@ -473,7 +473,7 @@ def reiniciarJuego():
     pygame.display.set_caption(
         "Pregunta T      Presiona Tab para mostrar los personajes por separado o presiona Z para ver más opciones"
     )
-    set_CajaObstaculo(mBall(0.2,0.2,0.2,[-20,0,0]))
+    set_CajaObstaculo(mBall(0.2, 0.2, 0.2, [-20, 0, 0]))
     set_puntos(0)
     set_cont(0)
     set_lvl(1)
@@ -497,7 +497,9 @@ def ejecucionPregunta():
         if interseccion(cajaPersonaje, cajas[i]) and visible[i] == 1:
             run_tkinter(2, ajolote, finn, mapache)
             visible[i] = 0
-    if interseccion(cajaPersonaje, get_CajaObstaculos()):
+    if interseccion(cajaPersonaje, get_CajaObstaculo()) or (
+        get_lvl() == 3 and (interseccion(cajaPersonaje, getCajaObstaculo2()))
+    ):
         set_valP(str(get_Puntos()))
         set_gameOver(True)
 
@@ -710,7 +712,7 @@ while True:
             False,
         )
         glPopMatrix()
-    
+
     if get_gameOver():
         set_gameOver(False)
         run_tkinter(6, ajolote, finn, mapache)

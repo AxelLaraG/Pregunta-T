@@ -3,7 +3,9 @@ from OpenGL.GLU import *
 from mBall import mBall
 
 cajaObstaculo = mBall(0.2, 0.2, 0.2, [-20, 0, 0])
+cajaObstaculo2 = mBall(0.2, 0.2, 0.2, [-20, -20, 0])
 x = -3
+y2 = -3
 puntos = 0
 vidas = 3
 nivel = 1
@@ -61,14 +63,14 @@ preguntas_Mapache = [
     "En un debate, ¿qué es una contra-argumentación?",  # argumento que refuta
     "¿Por qué es importante seleccionar información relevante al hacer un resumen?",  # resumir la idea principal y puntos clave
     # Nivel 3
-    "¿?",
-    "¿?",
-    "¿?",
-    "¿?",
-    "¿?",
-    "¿?",
-    "¿?",
-    "¿?",
+    "¿Cómo pueden los autores crear un ambiente y tono en un texto descriptivo?",  # palabras y detalles específicos
+    "¿Cómo se utilizan las citas en un texto argumentativo?",  # respaldar los argumentos y proporcionar evidencia adicional
+    "¿Qué son los conectores lógicos?",  # palabras o frases que conectan ideas
+    "¿Cómo influye la voz del autor en la construcción de un texto argumentativo?",  # cómo se presenta la argumentación
+    "¿Qué es una oración de tópico?",  # oración que introduce un tema
+    "¿Cuáles son los pasos clave para hacer un resumen efectivo?",  # lectura completa del texto, identificar la idea principal y los puntos clave, y escribir un resumen conciso.
+    "Explica la diferencia entre la estructura lineal y no lineal en un texto narrativo.",  # La estructura lineal sigue una secuencia cronológica, mientras que la no lineal utiliza flashbacks, flashforwards u otras técnicas.
+    "¿Cuál es el propósito de utilizar la ironía en un texto argumentativo?",  # expresar sarcasmo o resaltar contradicciones
 ]
 
 preguntas_Finn = [
@@ -106,9 +108,14 @@ def set_vidas(value):
     vidas = value
 
 
-def get_CajaObstaculos():
+def get_CajaObstaculo():
     global cajaObstaculo
     return cajaObstaculo
+
+
+def getCajaObstaculo2():
+    global cajaObstaculo2
+    return cajaObstaculo2
 
 
 def set_x(value):
@@ -134,7 +141,12 @@ def set_lvl(lvl):
     if lvl == 2:
         numP = 8
     if lvl == 3:
-        numP = 9
+        numP = 16
+
+
+def get_lvl():
+    global nivel
+    return nivel
 
 
 def get_Puntos():
@@ -276,36 +288,170 @@ def validarRespuesta(ajolote, finn, mapache):
         ):
             err = False
     elif numP == 9:
-        if (ajolote and ("peso mexicano" in respuesta.lower())) or (
-            finn and ("0.15" in respuesta)
-        ) or (mapache and ("persuadir a un público" in respuesta.lower())):
+        if (
+            (ajolote and ("peso mexicano" in respuesta.lower()))
+            or (finn and ("0.15" in respuesta))
+            or (mapache and ("persuadir a un público" in respuesta.lower()))
+        ):
             err = False
     elif numP == 10:
-        if (ajolote and ("venustiano carranza" in respuesta.lower())) or (
-            finn and ("5" in respuesta)
-        ) or (mapache and ("herramienta visual usada para representar ideas" in respuesta.lower())):
+        if (
+            (ajolote and ("venustiano carranza" in respuesta.lower()))
+            or (finn and ("5" in respuesta))
+            or (
+                mapache
+                and (
+                    "herramienta visual usada para representar ideas"
+                    in respuesta.lower()
+                )
+            )
+        ):
             err = False
     elif numP == 11:
-        if (ajolote and ("batalla de puebla" in respuesta.lower())) or (
-            finn and ("12" in respuesta)
-        ) or (mapache and ("proporcionar información" in respuesta.lower())):
+        if (
+            (ajolote and ("batalla de puebla" in respuesta.lower()))
+            or (finn and ("12" in respuesta))
+            or (mapache and ("proporcionar información" in respuesta.lower()))
+        ):
             err = False
     elif numP == 12:
-        if (ajolote and ("sierra madre" in respuesta.lower())) or (
-            finn and ("5" in respuesta)
-        ) or (mapache and ()):
+        if (
+            (ajolote and ("sierra madre" in respuesta.lower()))
+            or (finn and ("5" in respuesta))
+            or (
+                mapache
+                and (
+                    "organiza y representa argumentos" in respuesta.lower()
+                    or "representa y organiza argumentos" in respuesta.lower()
+                )
+            )
+        ):
             err = False
     elif numP == 13:
-        if (ajolote and ("1821" in respuesta)) or (finn and ("15" in respuesta)):
+        if (
+            (ajolote and ("1821" in respuesta))
+            or (finn and ("15" in respuesta))
+            or (
+                mapache
+                and (
+                    "descriptivo" in respuesta.lower()
+                    and "narrativo" in respuesta.lower()
+                )
+            )
+        ):
             err = False
     elif numP == 14:
-        if (ajolote and ("tulum" in respuesta.lower())) or (
-            finn and ("infinitas" in respuesta.lower())
+        if (
+            (ajolote and ("tulum" in respuesta.lower()))
+            or (finn and ("infinitas" in respuesta.lower()))
+            or (mapache and ("argumento que refuta" in respuesta.lower()))
         ):
             err = False
     elif numP == 15:
-        if (ajolote and ("miguel hidalgo y costilla" in respuesta.lower())) or (
-            finn and ("60" in respuesta)
+        if (
+            (ajolote and ("miguel hidalgo y costilla" in respuesta.lower()))
+            or (finn and ("60" in respuesta))
+            or (mapache and ("resumir la idea" in respuesta.lower()))
+        ):
+            err = False
+    elif numP == 16:
+        if (
+            (ajolote and ("tratado de guadalupe hidalgo" in respuesta.lower()))
+            or (finn and ("0.18" in respuesta))
+            or (
+                mapache
+                and (
+                    "palabras y detalles específicos" in respuesta.lower()
+                    or "detalles y palabras específicas"
+                )
+            )
+        ):
+            err = False
+    elif numP == 17:
+        if (
+            (
+                ajolote
+                and (
+                    "maximiliano i" in respuesta.lower()
+                    or "maximiliano 1" in respuesta.lower()
+                )
+            )
+            or (finn and ("4" in respuesta))
+            or (
+                mapache
+                and ("respaldar los argumentos" in respuesta.lower())
+                and "proporcionar evidencia adicional" in respuesta.lower()
+            )
+        ):
+            err = False
+    elif numP == 18:
+        if (
+            (ajolote and ("basaseachi" in respuesta.lower()))
+            or (finn and ("8" in respuesta))
+            or (
+                mapache
+                and (
+                    "palabras que conectan ideas" in respuesta.lower()
+                    or "frases que conectan ideas" in respuesta.lower()
+                )
+            )
+        ):
+            err = False
+    elif numP == 19:
+        if (
+            (ajolote and ("diego rivera" in respuesta.lower()))
+            or (finn and ("200" in respuesta))
+            or (mapache and ("presenta la argumentación" in respuesta.lower()))
+        ):
+            err = False
+    elif numP == 20:
+        if (
+            (ajolote and ("jalisco" in respuesta.lower()))
+            or (finn and ("243" in respuesta))
+            or (mapache and ("oración que introduce un tema" in respuesta.lower()))
+        ):
+            err = False
+    elif numP == 21:
+        if (
+            (ajolote and ("1910" in respuesta))
+            or (finn and ("3:2" in respuesta))
+            or (
+                mapache
+                and (
+                    "lectura completa del texto" in respuesta.lower()
+                    and (
+                        "idea principal" in respuesta.lower()
+                        and "puntos clave" in respuesta.lower()
+                    )
+                    and (
+                        "escribir resumen" in respuesta.lower()
+                        or "escribir un resumen" in respuesta.lower()
+                    )
+                )
+            )
+        ):
+            err = False
+    elif numP == 22:
+        if (ajolote and ("emiliano zapata" in respuesta.lower())) or (
+            mapache
+            and (
+                "estructura lineal sigue una secuencia cronológica" in respuesta.lower()
+                and "no lineal usa flashbacks" in respuesta.lower()
+            )
+        ):
+            err = False
+    elif numP == 23:
+        if (
+            (ajolote and ("el triunfo" in respuesta.lower()))
+            or (finn and ("15" in respuesta))
+            or (finn and ("-14" in respuesta))
+            or (
+                mapache
+                and (
+                    "expresar sarcasmo" in respuesta.lower()
+                    or "resaltar contradicciones" in respuesta.lower()
+                )
+            )
         ):
             err = False
 
@@ -377,7 +523,7 @@ def crearCaja(centro):
 
 
 def drawObstaculos(radius, y):
-    global nivel, x
+    global nivel, x, y2
     if x >= -4 and x <= 4:
         x += 0.1
     else:
@@ -388,8 +534,12 @@ def drawObstaculos(radius, y):
     gluSphere(gluNewQuadric(), radius, 20, 20)  # Dibuja la esfera
     glPopMatrix()
     if nivel == 3:
+        if y2 >= -4 and y2 <= 4:
+            y2 += 0.1
+        else:
+            y2 = -4
         glPushMatrix()
-        glTranslate(x, y, 0)
+        glTranslate(x, y2, 0)
         gluSphere(gluNewQuadric(), radius, 20, 20)  # Dibuja la esfera
         glPopMatrix()
 
@@ -403,7 +553,7 @@ def drawNivel(ajolote, finn, mapache):
         y = 1
     if ajolote:
         y = 0.5
-    if nivel == 2:
+    if nivel >= 2:
         drawObstaculos(radius, y)
         centro = [x, y, 0]
         cajaObstaculo = mBall(0.2, 0.2, 0.2, centro)
