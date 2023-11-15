@@ -14,6 +14,7 @@ camina = False
 
 # Variable para detectar si se va a jugar
 juego = False
+nivel_nuevo = True
 
 # Variables para el control del mouse
 rotating = False
@@ -469,7 +470,7 @@ def reiniciarElementos():
 
 
 def reiniciarJuego():
-    global juego, personaje, p_x, p_y, p_z
+    global juego, personaje, p_x, p_y, p_z, nivel_nuevo
     pygame.display.set_caption(
         "Pregunta T      Presiona Tab para mostrar los personajes por separado o presiona Z para ver más opciones"
     )
@@ -479,7 +480,7 @@ def reiniciarJuego():
     set_lvl(1)
     set_x(-3)
     set_vidas(3)
-    juego = False
+    juego, nivel_nuevo = False, True
     personaje = 0
     p_x, p_y, p_z = 0, 0, 0
     reiniciarElementos()
@@ -487,7 +488,7 @@ def reiniciarJuego():
 
 
 def ejecucionPregunta():
-    global visible, ajolote, finn, mapache, cajas, juego
+    global visible, ajolote, finn, mapache, cajas, juego, nivel_nuevo
     cajaPersonaje = fn.cajaCabeza
     if mapache:
         cajaPersonaje = mp.cajaCabeza
@@ -496,12 +497,26 @@ def ejecucionPregunta():
     for i in range(len(cajas)):
         if interseccion(cajaPersonaje, cajas[i]) and visible[i] == 1:
             run_tkinter(2, ajolote, finn, mapache)
+            nivel_nuevo = False
             visible[i] = 0
     if interseccion(cajaPersonaje, get_CajaObstaculo()) or (
         get_lvl() == 3 and (interseccion(cajaPersonaje, getCajaObstaculo2()))
     ):
         set_valP(str(get_Puntos()))
         set_gameOver(True)
+
+
+# Función para renderizar texto en OpenGL
+def render_text(text, x, y):
+    font = pygame.font.Font(None, 36)  # Tamaño de la fuente
+    text_surface = font.render(
+        text, True, (255, 255, 255, 0), (0, 0, 0, 0)
+    )  # Color del texto, fondo transparente
+    text_data = pygame.image.tostring(text_surface, "RGBA", True)
+    width, height = text_surface.get_width(), text_surface.get_height()
+
+    glRasterPos2f(x, y)
+    glDrawPixels(width, height, GL_RGBA, GL_UNSIGNED_BYTE, text_data)
 
 
 while True:
@@ -532,6 +547,11 @@ while True:
                 camina = True
             if event.key == pygame.K_e and juego:
                 reiniciarJuego()
+            if event.key == pygame.K_TAB and juego and nivel_nuevo:
+                if get_lvl() < 3:
+                    set_lvl(get_lvl()+1)
+                else:
+                    set_lvl(1)
             elif event.key == pygame.K_z:
                 if juego:
                     run_tkinter(1, ajolote, finn, mapache)
@@ -576,7 +596,6 @@ while True:
                         personaje = 0
                     reiniciarElementos()
                 elif event.key == pygame.K_RETURN and (ajolote or finn or mapache):
-                    run_tkinter(7, ajolote, finn, mapache)
                     juego = True
                     pygame.display.set_caption(
                         "PreguntaT Presiona Z para instrucciones o E para regresar al menú"
@@ -626,7 +645,9 @@ while True:
 
     if juego:
         drawNivel(ajolote, finn, mapache)
-
+        render_text("Vidas: " + str(get_Vidas()), -4.3, 2)
+        render_text("Puntos: " + str(get_Puntos()), 3, 2)
+        render_text("Nivel: "+str(get_lvl()),0,3)
     if ajolote:
         if juego:
             aj.dibujaAjoloteJuego(

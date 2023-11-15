@@ -39,14 +39,8 @@ def run_tkinter(opc, ajolote, finn, mapache):
         t = threading.Thread(target=mostrarInstruccionesJuego)
     if opc == 2:  # Mostrar pregunta
         t = threading.Thread(target=mostrarPregunta, args=(ajolote, finn, mapache))
-    if opc == 3:  # Respuesta equivocada
-        t = threading.Thread(target=respuestaErronea)
-    if opc == 5:  # Respuesta correcta
-        t = threading.Thread(target=ventanaFelicitacion)
     if opc == 6:  # Juego Terminado con vidas
         t = threading.Thread(target=ventanaPuntos)
-    if opc == 7:  # Selección de nivel
-        t = threading.Thread(target=ventanaSeleccionNivel)
     t.start()
 
 
@@ -57,18 +51,19 @@ def accionCerrar(root):
     
 
 def accion_aceptar(respuesta_Entry, root, ajolote, finn, mapache):
-    global cont
+    global cont,ventana
+    ventana = False
     set_Respuesta(respuesta_Entry.get())
     root.quit()  # Detener el bucle principal de tkinter
     validarRespuesta(ajolote, finn, mapache)
     if get_error():
         if get_Vidas() > 1:
             reducirVidas()
-            run_tkinter(3, ajolote, finn, mapache)
         else:
             set_gameOver(True)
     else:
-        run_tkinter(5, ajolote, finn, mapache)
+        modificarPuntos()
+    set_valP(str(get_Puntos()))
     modificarPregunta()
     cont +=1
     if cont >= 8:
@@ -116,45 +111,6 @@ def ventanaPuntos():
     root.mainloop()
 
 
-def ventanaFelicitacion():
-    modificarPuntos()
-    set_valP(str(get_Puntos()))
-    root = tk.Tk()
-    root.title("Felicitación")
-    root.protocol("WM_DELETE_WINDOW", accionCerrar(root))
-    label = tk.Label(
-        root,
-        text="Respuesta correcta! +10 puntos",
-        font=("Georgia", 8),
-        padx=20,
-        pady=20,
-        justify="center",
-    )
-    label.pack()
-
-    centrarVentana(root)
-
-    root.mainloop()
-
-
-def respuestaErronea():
-    set_valP(str(get_Puntos()))
-    root = tk.Tk()
-    root.title("Respuesta equivocada")
-    root.protocol("WM_DELETE_WINDOW", accionCerrar(root))
-    label = tk.Label(
-        root,
-        text="Respuesta equivocada te quedan: " + str(get_Vidas()) + " vidas",
-        font=("Georgia", 8),
-        padx=20,
-        pady=20,
-        justify="center",
-    )
-    label.pack()
-    centrarVentana(root)
-    root.mainloop()
-
-
 def mostrarPregunta(ajolote, finn, mapache):
     global ventana
     ventana = True
@@ -182,7 +138,7 @@ def mostrarPregunta(ajolote, finn, mapache):
     if mapache:
         label = tk.Label(
             root,
-            text=preguntas_Ajolote[get_numP()],
+            text=preguntas_Mapache[get_numP()],
             font=("Georgia", 8),
             padx=20,
             pady=20,
@@ -215,6 +171,7 @@ def mostrarInstruccionesJuego():
         "\n\nS=Moverse hacia la adelante"
         "\n\nD= Moverse hacia derecha"
         "\n\nE=Regresar al menú"
+        "\n\nTAB= Cambia de nivel (Solo si no se ha comenzado el nivel)"
         "\n\nEvita las esferas rojas, son Game Over directo",
         font=("Georgia", 8),
         padx=20,
@@ -306,22 +263,3 @@ def mostrarInstruccionesPersonaje(ajolote, finn, mapache):
     label.pack()
     root.mainloop()
 
-
-def ventanaSeleccionNivel():
-    global ventana
-    ventana = True
-    root = tk.Tk()
-    root.title("Selección de nivel")
-    root.protocol("WM_DELETE_WINDOW", accionCerrar(root))
-    label = Label(
-        root, text="", font=("Georgia", 8), padx=20, pady=20, justify="center"
-    )
-    lvl1_button = tk.Button(root, text="Nivel 1", command=lambda: seleccionNivel(1,root))
-    lvl2_button = tk.Button(root, text="Nivel 2", command=lambda: seleccionNivel(2,root))
-    lvl3_button = tk.Button(root,text="Nivel 3", command=lambda: seleccionNivel(3,root))
-    lvl1_button.pack()
-    lvl2_button.pack(pady=10)
-    lvl3_button.pack()
-    label.pack()
-    centrarVentana(root)
-    root.mainloop()
