@@ -478,7 +478,7 @@ def reiniciarJuego():
     set_puntos(0)
     set_cont(0)
     set_lvl(1)
-    set_x(-3)
+    set_x_y2(-3)
     set_vidas(3)
     juego, nivel_nuevo = False, True
     personaje = 0
@@ -549,9 +549,11 @@ while True:
                 reiniciarJuego()
             if event.key == pygame.K_TAB and juego and nivel_nuevo:
                 if get_lvl() < 3:
-                    set_lvl(get_lvl()+1)
+                    set_lvl(get_lvl() + 1)
                 else:
                     set_lvl(1)
+                    set_x_y2(-3)
+                set_CajaObstaculo(mBall(0.2, 0.2, 0.2, [-20, 0, 0]))
             elif event.key == pygame.K_z:
                 if juego:
                     run_tkinter(1, ajolote, finn, mapache)
@@ -647,7 +649,7 @@ while True:
         drawNivel(ajolote, finn, mapache)
         render_text("Vidas: " + str(get_Vidas()), -4.3, 2)
         render_text("Puntos: " + str(get_Puntos()), 3, 2)
-        render_text("Nivel: "+str(get_lvl()),0,3)
+        render_text("Nivel: " + str(get_lvl()), 0, 3)
     if ajolote:
         if juego:
             aj.dibujaAjoloteJuego(

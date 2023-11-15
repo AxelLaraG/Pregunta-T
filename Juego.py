@@ -118,14 +118,16 @@ def getCajaObstaculo2():
     return cajaObstaculo2
 
 
-def set_x(value):
-    global x
+def set_x_y2(value):
+    global x,y2
     x = value
+    y2 = value
 
 
 def set_CajaObstaculo(value):
-    global cajaObstaculo
+    global cajaObstaculo,cajaObstaculo2
     cajaObstaculo = value
+    cajaObstaculo2 = value
 
 
 def set_puntos(val):

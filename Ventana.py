@@ -9,21 +9,26 @@ gameOver = False
 cont = 0
 valP = ""
 
+
 def set_valP(value):
     global valP
     valP = value
+
 
 def get_gameOver():
     global gameOver
     return gameOver
 
+
 def set_cont(val):
     global cont
     cont = val
 
+
 def set_gameOver(value):
     global gameOver
     gameOver = value
+
 
 def get_Ventana():
     global ventana
@@ -48,10 +53,10 @@ def accionCerrar(root):
     global ventana
     ventana = False
     root.quit()
-    
+
 
 def accion_aceptar(respuesta_Entry, root, ajolote, finn, mapache):
-    global cont,ventana
+    global cont, ventana
     ventana = False
     set_Respuesta(respuesta_Entry.get())
     root.quit()  # Detener el bucle principal de tkinter
@@ -65,7 +70,7 @@ def accion_aceptar(respuesta_Entry, root, ajolote, finn, mapache):
         modificarPuntos()
     set_valP(str(get_Puntos()))
     modificarPregunta()
-    cont +=1
+    cont += 1
     if cont >= 8:
         set_gameOver(True)
 
@@ -73,11 +78,13 @@ def accion_aceptar(respuesta_Entry, root, ajolote, finn, mapache):
 def on_cerrar_ventana():
     pass
 
-def seleccionNivel(lvl,root):
+
+def seleccionNivel(lvl, root):
     global ventana
     ventana = False
     set_lvl(lvl)
     root.quit()
+
 
 def centrarVentana(root):
     # Obtener el tamaño de la pantalla
@@ -262,4 +269,3 @@ def mostrarInstruccionesPersonaje(ajolote, finn, mapache):
         )
     label.pack()
     root.mainloop()
-
