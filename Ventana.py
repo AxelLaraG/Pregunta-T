@@ -1,6 +1,9 @@
+import os
 import tkinter as tk
 from tkinter import Label
 import threading
+
+import pygame
 from Juego import *
 
 # Detectar si la pregunta se está mostrando
@@ -8,6 +11,15 @@ ventana = False
 gameOver = False
 cont = 0
 valP = ""
+tesoro = False
+
+def setTesoro(value):
+    global tesoro
+    tesoro = value
+    
+def getTesoro():
+    global tesoro
+    return tesoro
 
 
 def set_valP(value):
@@ -44,7 +56,7 @@ def run_tkinter(opc, ajolote, finn, mapache):
         t = threading.Thread(target=mostrarInstruccionesJuego)
     if opc == 2:  # Mostrar pregunta
         t = threading.Thread(target=mostrarPregunta, args=(ajolote, finn, mapache))
-    if opc == 6:  # Juego Terminado con vidas
+    if opc == 6:  # Juego Terminado 
         t = threading.Thread(target=ventanaPuntos)
     t.start()
 
@@ -62,6 +74,7 @@ def accion_aceptar(respuesta_Entry, root, ajolote, finn, mapache):
     root.quit()  # Detener el bucle principal de tkinter
     validarRespuesta(ajolote, finn, mapache)
     if get_error():
+        pygame.mixer.Sound(os.path.join("Sounds/Juego", "5.wav")).play()
         if get_Vidas() > 1:
             reducirVidas()
         else:
@@ -70,6 +83,7 @@ def accion_aceptar(respuesta_Entry, root, ajolote, finn, mapache):
         modificarPuntos()
     set_valP(str(get_Puntos()))
     modificarPregunta()
+    setTesoro(False)
     cont += 1
     if cont >= 8:
         set_gameOver(True)
@@ -210,7 +224,8 @@ def mostrarInstruccionesPersonaje(ajolote, finn, mapache):
             "\n\nO: Mover patas traseras"
             "\n\nV: Sacar lengua"
             "\n\nK: Mareado"
-            "\n\nFlecha Izq y Der cambia de fondo",
+            "\n\nFlecha Izq y Der cambia de fondo"
+            "\n\nTAB: Cambia personaje",
             font=("Georgia", 8),
             padx=20,
             pady=20,
@@ -230,7 +245,8 @@ def mostrarInstruccionesPersonaje(ajolote, finn, mapache):
             "\n\nF: Mover brazo izquierdo"
             "\n\nB: Mover brazo derecho"
             "\n\nX: Mover pie izquierdo"
-            "\n\nY: Mover pie derecho",
+            "\n\nY: Mover pie derecho"
+            "\n\nTAB: Cambia personaje",
             font=("Georgia", 8),
             padx=20,
             pady=20,
@@ -249,7 +265,8 @@ def mostrarInstruccionesPersonaje(ajolote, finn, mapache):
             "\n\nY: Llorar"
             "\n\nN: Emocionado"
             "\n\nU: Confundido"
-            "\n\nFlecha Izq y Der cambia de fondo",
+            "\n\nFlecha Izq y Der cambia de fondo"
+            "\n\nTAB: Cambia personaje",
             font=("Georgia", 8),
             padx=20,
             pady=20,
@@ -261,7 +278,8 @@ def mostrarInstruccionesPersonaje(ajolote, finn, mapache):
             text="Seleccionar personaje:"
             "\n\n5:Finn el humano"
             "\n\n6:Miguel el Ajolote"
-            "\n\n7:Juanito el Mapache",
+            "\n\n7:Juanito el Mapache"
+            "\n\nTAB: Cambia personaje",
             font=("Georgia", 8),
             padx=20,
             pady=20,

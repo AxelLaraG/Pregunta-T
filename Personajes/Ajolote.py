@@ -182,7 +182,7 @@ def dibujaAjolote(
         dibujaTraje(" ")
 
 
-def dibujaAjoloteJuego(x, y, z, camina, frente, izquierda, derecha):
+def dibujaAjoloteJuego(x, y, z, camina, frente, izquierda, derecha,tesoro):
     global centro, cajaCabeza
     glPushMatrix()
     glTranslate(x, y, z)
@@ -202,6 +202,14 @@ def dibujaAjoloteJuego(x, y, z, camina, frente, izquierda, derecha):
         dibujaCuernoDr(" ")
         dibujaMono()
         dibujaTraje("C")
+    elif tesoro:
+        dibujaCabeza("H")
+        dibujaCuerpo(" ")
+        dibujaCola(" ")
+        dibujaCuernoIz(" ")
+        dibujaCuernoDr(" ")
+        dibujaMono()
+        dibujaTraje(" ")
     else:
         dibujaCabeza(" ")
         dibujaCuerpo(" ")

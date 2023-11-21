@@ -44,7 +44,7 @@ pygame.init()
 display = (800, 600)
 pygame.display.set_mode(display, DOUBLEBUF | OPENGL)
 pygame.display.set_caption(
-    "Pregunta T      Presiona Tab para mostrar los personajes por separado o presiona Z para ver más opciones"
+    "Pregunta T      Presiona Z para ver instrucciones"
 )
 
 # Configura la perspectiva OpenGL
@@ -93,6 +93,8 @@ def llenadoDeSonidos():
         raiz = "Sounds/Ajolote"
     if mapache:
         raiz = "Sounds/Mapache"
+    if juego:
+        raiz = "Sounds/Juego"
     sound.clear()
     for i in os.listdir(raiz):
         if i.endswith(".wav") or i.endswith(".mp3"):
@@ -472,7 +474,7 @@ def reiniciarElementos():
 def reiniciarJuego():
     global juego, personaje, p_x, p_y, p_z, nivel_nuevo
     pygame.display.set_caption(
-        "Pregunta T      Presiona Tab para mostrar los personajes por separado o presiona Z para ver más opciones"
+        "Pregunta T      Presiona Z para ver instrucciones"
     )
     set_CajaObstaculo(mBall(0.2, 0.2, 0.2, [-20, 0, 0]))
     set_puntos(0)
@@ -496,12 +498,15 @@ def ejecucionPregunta():
         cajaPersonaje = aj.cajaCabeza
     for i in range(len(cajas)):
         if interseccion(cajaPersonaje, cajas[i]) and visible[i] == 1:
+            sound[4].play()
             run_tkinter(2, ajolote, finn, mapache)
             nivel_nuevo = False
             visible[i] = 0
+            setTesoro(True)
     if interseccion(cajaPersonaje, get_CajaObstaculo()) or (
         get_lvl() == 3 and (interseccion(cajaPersonaje, getCajaObstaculo2()))
     ):
+        pygame.mixer.Sound(os.path.join("Sounds/Juego", "5.wav")).play()
         set_valP(str(get_Puntos()))
         set_gameOver(True)
 
@@ -534,6 +539,7 @@ while True:
             ):
                 keys[chr(event.key).upper()] = False
                 camina = False
+                sound[3].stop()
         elif event.type == pygame.KEYDOWN:
             if event.key in cam:
                 cam[event.key] = True
@@ -545,13 +551,21 @@ while True:
             ):
                 keys[chr(event.key).upper()] = True
                 camina = True
+                sound[3].stop()
+                sound[3].play()
             if event.key == pygame.K_e and juego:
                 reiniciarJuego()
             if event.key == pygame.K_TAB and juego and nivel_nuevo:
                 if get_lvl() < 3:
                     set_lvl(get_lvl() + 1)
+                    sound[band].stop()
+                    band += 1
+                    sound[band].play()
                 else:
                     set_lvl(1)
+                    sound[band].stop()
+                    band = 0
+                    sound[band].play()
                     set_x_y2(-3)
                 set_CajaObstaculo(mBall(0.2, 0.2, 0.2, [-20, 0, 0]))
             elif event.key == pygame.K_z:
@@ -564,45 +578,47 @@ while True:
                 if event.key == pygame.K_5:
                     personaje = 1
                     pygame.display.set_caption(
-                        "Pregunta T      Presiona Z para mostrar los movimientos o Enter para seleccionar al personaje"
+                        "Pregunta T      Presiona Z para mostrar instrucciones"
                     )
                     reiniciarElementos()
                 elif event.key == pygame.K_6:
                     personaje = 2
                     pygame.display.set_caption(
-                        "Pregunta T      Presiona Z para mostrar los movimientos o Enter para seleccionar al personaje"
+                        "Pregunta T      Presiona Z para mostrar instrucciones"
                     )
                     reiniciarElementos()
                 elif event.key == pygame.K_7:
                     personaje = 3
                     pygame.display.set_caption(
-                        "Pregunta T      Presiona Z para mostrar los movimientos o Enter para seleccionar al personaje"
+                        "Pregunta T      Presiona Z para mostrar instrucciones"
                     )
                     reiniciarElementos()
                 elif event.key == pygame.K_0:
                     personaje = 0
                     pygame.display.set_caption(
-                        "Pregunta T      Presiona Tab para mostrar los personajes por separado o presiona Z para ver más opciones"
+                        "Pregunta T     Presiona Z para mostrar instrucciones"
                     )
                     reiniciarElementos()
                 elif event.key == pygame.K_TAB:
                     if personaje < 3:
                         pygame.display.set_caption(
-                            "Pregunta T      Presiona Z para mostrar los movimientos o Enter para seleccionar al personaje"
+                            "Pregunta T      Presiona Z para mostrar instrucciones"
                         )
                         personaje += 1
                     else:
                         pygame.display.set_caption(
-                            "Pregunta T      Presiona Tab para mostrar los personajes por separado o presiona Z para ver más opciones"
+                            "Pregunta T     Presiona Z para mostrar instrucciones"
                         )
                         personaje = 0
                     reiniciarElementos()
                 elif event.key == pygame.K_RETURN and (ajolote or finn or mapache):
                     juego = True
+                    
                     pygame.display.set_caption(
-                        "PreguntaT Presiona Z para instrucciones o E para regresar al menú"
+                        "PreguntaT Presiona Z para instrucciones"
                     )
                     reiniciarElementos()
+                    sound[band].play()
                 elif event.key == pygame.K_RIGHT and not (finn):
                     if ajolote:
                         if cont < 6:
@@ -653,7 +669,7 @@ while True:
     if ajolote:
         if juego:
             aj.dibujaAjoloteJuego(
-                p_x, p_y, p_z, camina, keys["W"], keys["A"], keys["D"]
+                p_x, p_y, p_z, camina, keys["W"], keys["A"], keys["D"],getTesoro()
             )
         else:
             aj.dibujaAjolote(
@@ -673,7 +689,7 @@ while True:
             )
     elif finn:
         if juego:
-            fn.dibujaFinnJuego(p_x, p_y, p_z, camina, keys["W"], keys["A"], keys["D"])
+            fn.dibujaFinnJuego(p_x, p_y, p_z, camina, keys["W"], keys["A"], keys["D"],getTesoro())
         else:
             fn.dibujo(
                 keys["S"],

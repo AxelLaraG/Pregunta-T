@@ -104,7 +104,7 @@ def dibujo(
         dibujabrazos(" ")
 
 
-def dibujaFinnJuego(x, y, z, camina, frente, izquierda, derecha):
+def dibujaFinnJuego(x, y, z, camina, frente, izquierda, derecha,tesoro):
     global centro, cajaCabeza
     glPushMatrix()
     glTranslate(x, y, z)
@@ -121,6 +121,12 @@ def dibujaFinnJuego(x, y, z, camina, frente, izquierda, derecha):
         dibujacuerpo(" ")
         dibujapiernas("C")
         dibujabrazos("C")
+    elif tesoro:
+        dibujaCabeza("G")
+        dibujacuerpo(" ")
+        dibujapiernas(" ")
+        dibujabrazos(" ")
+        
     else:
         dibujaCabeza(" ")
         dibujacuerpo(" ")
