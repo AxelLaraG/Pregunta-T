@@ -224,6 +224,7 @@ def mostrarInstruccionesPersonaje(ajolote, finn, mapache):
             "\n\nO: Mover patas traseras"
             "\n\nV: Sacar lengua"
             "\n\nK: Mareado"
+            "\n\nQ: Créditos"
             "\n\nFlecha Izq y Der cambia de fondo"
             "\n\nTAB: Cambia personaje",
             font=("Georgia", 8),
@@ -246,6 +247,7 @@ def mostrarInstruccionesPersonaje(ajolote, finn, mapache):
             "\n\nB: Mover brazo derecho"
             "\n\nX: Mover pie izquierdo"
             "\n\nY: Mover pie derecho"
+            "\n\nQ: Créditos"
             "\n\nTAB: Cambia personaje",
             font=("Georgia", 8),
             padx=20,
@@ -266,6 +268,7 @@ def mostrarInstruccionesPersonaje(ajolote, finn, mapache):
             "\n\nN: Emocionado"
             "\n\nU: Confundido"
             "\n\nFlecha Izq y Der cambia de fondo"
+            "\n\nQ: Créditos"
             "\n\nTAB: Cambia personaje",
             font=("Georgia", 8),
             padx=20,
@@ -279,6 +282,7 @@ def mostrarInstruccionesPersonaje(ajolote, finn, mapache):
             "\n\n5:Finn el humano"
             "\n\n6:Miguel el Ajolote"
             "\n\n7:Juanito el Mapache"
+            "\n\nQ: Créditos"
             "\n\nTAB: Cambia personaje",
             font=("Georgia", 8),
             padx=20,

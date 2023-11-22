@@ -11,6 +11,7 @@ import os
 
 # Ddetectar si el personaje se está moviendo
 camina = False
+creditos = False
 
 # Variable para detectar si se va a jugar
 juego = False
@@ -600,6 +601,7 @@ while True:
                     )
                     reiniciarElementos()
                 elif event.key == pygame.K_TAB:
+                    creditos = False
                     if personaje < 3:
                         pygame.display.set_caption(
                             "Pregunta T      Presiona Z para mostrar instrucciones"
@@ -613,7 +615,7 @@ while True:
                     reiniciarElementos()
                 elif event.key == pygame.K_RETURN and (ajolote or finn or mapache):
                     juego = True
-                    
+                    creditos = False
                     pygame.display.set_caption(
                         "PreguntaT Presiona Z para instrucciones"
                     )
@@ -644,15 +646,22 @@ while True:
                             cont = 4
                     definirFondo()
                 elif event.key >= K_a and event.key <= K_z:
-                    val1 = chr(event.key).upper() in keys
-                    if val1:
-                        val2 = keys[chr(event.key).upper()] == False
-                        if val1 and val2:
-                            reloadKeys()
-                            reproducirSonido()
-                            keys[chr(event.key).upper()] = True
+                    if event.key == pygame.K_q:
+                        if creditos:
+                            creditos = False
                         else:
-                            keys[chr(event.key).upper()] = False
+                            creditos = True
+                    else:
+                        creditos = False
+                        val1 = chr(event.key).upper() in keys
+                        if val1:
+                            val2 = keys[chr(event.key).upper()] == False
+                            if val1 and val2:
+                                reloadKeys()
+                                reproducirSonido()
+                                keys[chr(event.key).upper()] = True
+                            else:
+                                keys[chr(event.key).upper()] = False
 
     movCam()
     if juego:
@@ -660,7 +669,11 @@ while True:
         ejecucionPregunta()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
     texturas()
-
+    if creditos:
+        render_text("Creado por:",-4,3.4)
+        render_text("Aguirre Trujillo Wendy Violeta",-4,3)
+        render_text("Lara Madero Axel",-4,2.5)
+        render_text("Pavon Martel Brayham",-4,2)
     if juego:
         drawNivel(ajolote, finn, mapache)
         render_text("Vidas: " + str(get_Vidas()), -4.3, 2)
@@ -754,6 +767,7 @@ while True:
 
     if get_gameOver():
         set_gameOver(False)
+        setTesoro(False)
         run_tkinter(6, ajolote, finn, mapache)
         reiniciarJuego()
     inicializarBrillo()
