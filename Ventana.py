@@ -198,7 +198,7 @@ def mostrarInstruccionesJuego():
     label = Label(
         ventanaInJ,
         text="Cómo jugar:"
-        "\n\nPara abrir una pregunta debes chocaar con las esferas doradas"
+        "\n\nPara abrir una pregunta debes chocar con las esferas doradas"
         "\n\n1: Mover cámara hacia abajo"
         "\n\n2: Mover cámara hacia arriba"
         "\n\n+: Zomm in"
