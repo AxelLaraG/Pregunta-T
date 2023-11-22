@@ -44,9 +44,7 @@ pygame.init()
 # Configuramos la ventana de Pygame
 display = (800, 600)
 pygame.display.set_mode(display, DOUBLEBUF | OPENGL)
-pygame.display.set_caption(
-    "Pregunta T      Presiona Z para ver instrucciones"
-)
+pygame.display.set_caption("Pregunta T      Presiona Z para ver instrucciones")
 
 # Configura la perspectiva OpenGL
 gluPerspective(45, (display[0] / display[1]), 0.1, 50.0)
@@ -474,9 +472,7 @@ def reiniciarElementos():
 
 def reiniciarJuego():
     global juego, personaje, p_x, p_y, p_z, nivel_nuevo
-    pygame.display.set_caption(
-        "Pregunta T      Presiona Z para ver instrucciones"
-    )
+    pygame.display.set_caption("Pregunta T      Presiona Z para ver instrucciones")
     set_CajaObstaculo(mBall(0.2, 0.2, 0.2, [-20, 0, 0]))
     set_puntos(0)
     set_cont(0)
@@ -555,6 +551,8 @@ while True:
                 sound[3].stop()
                 sound[3].play()
             if event.key == pygame.K_e and juego:
+                if getInstrucciones():
+                        accionCerrar(ventanaInstrucciones)
                 reiniciarJuego()
             if event.key == pygame.K_TAB and juego and nivel_nuevo:
                 if get_lvl() < 3:
@@ -602,6 +600,8 @@ while True:
                     reiniciarElementos()
                 elif event.key == pygame.K_TAB:
                     creditos = False
+                    if getInstrucciones():
+                        accionCerrar(ventanaInstrucciones)
                     if personaje < 3:
                         pygame.display.set_caption(
                             "Pregunta T      Presiona Z para mostrar instrucciones"
@@ -616,6 +616,8 @@ while True:
                 elif event.key == pygame.K_RETURN and (ajolote or finn or mapache):
                     juego = True
                     creditos = False
+                    if getInstrucciones():
+                        accionCerrar(ventanaInstrucciones)
                     pygame.display.set_caption(
                         "PreguntaT Presiona Z para instrucciones"
                     )
@@ -670,19 +672,21 @@ while True:
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
     texturas()
     if creditos:
-        render_text("Creado por:",-4,3.4)
-        render_text("Aguirre Trujillo Wendy Violeta",-4,3)
-        render_text("Lara Madero Axel",-4,2.5)
-        render_text("Pavon Martel Brayham",-4,2)
+        render_text("Creado por:", -4, 3.4)
+        render_text("Aguirre Trujillo Wendy Violeta", -4, 3)
+        render_text("Lara Madero Axel", -4, 2.5)
+        render_text("Pavon Martel Brayham", -4, 2)
     if juego:
         drawNivel(ajolote, finn, mapache)
         render_text("Vidas: " + str(get_Vidas()), -4.3, 2)
         render_text("Puntos: " + str(get_Puntos()), 3, 2)
         render_text("Nivel: " + str(get_lvl()), 0, 3)
+        if not (pygame.mixer.get_busy()):
+            sound[band].play()
     if ajolote:
         if juego:
             aj.dibujaAjoloteJuego(
-                p_x, p_y, p_z, camina, keys["W"], keys["A"], keys["D"],getTesoro()
+                p_x, p_y, p_z, camina, keys["W"], keys["A"], keys["D"], getTesoro()
             )
         else:
             aj.dibujaAjolote(
@@ -702,7 +706,9 @@ while True:
             )
     elif finn:
         if juego:
-            fn.dibujaFinnJuego(p_x, p_y, p_z, camina, keys["W"], keys["A"], keys["D"],getTesoro())
+            fn.dibujaFinnJuego(
+                p_x, p_y, p_z, camina, keys["W"], keys["A"], keys["D"], getTesoro()
+            )
         else:
             fn.dibujo(
                 keys["S"],
@@ -771,6 +777,7 @@ while True:
         run_tkinter(6, ajolote, finn, mapache)
         reiniciarJuego()
     inicializarBrillo()
-    handle_mouse_events(event)
+    if not (juego):
+        handle_mouse_events(event)
     pygame.display.flip()
     pygame.time.wait(10)

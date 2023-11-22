@@ -12,6 +12,12 @@ gameOver = False
 cont = 0
 valP = ""
 tesoro = False
+instrucciones = False
+ventanaInstrucciones = tk.Tk()
+
+def getInstrucciones():
+    global instrucciones
+    return instrucciones
 
 def setTesoro(value):
     global tesoro
@@ -48,11 +54,14 @@ def get_Ventana():
 
 
 def run_tkinter(opc, ajolote, finn, mapache):
+    global instrucciones
     if opc == 0:  # Instrucciones Personaje
+        instrucciones = True
         t = threading.Thread(
             target=mostrarInstruccionesPersonaje, args=(ajolote, finn, mapache)
         )
     if opc == 1:  # Instrucciones del Juego
+        instrucciones = True
         t = threading.Thread(target=mostrarInstruccionesJuego)
     if opc == 2:  # Mostrar pregunta
         t = threading.Thread(target=mostrarPregunta, args=(ajolote, finn, mapache))
@@ -67,11 +76,10 @@ def accionCerrar(root):
     root.quit()
 
 
-def accion_aceptar(respuesta_Entry, root, ajolote, finn, mapache):
+def accion_aceptar(respuesta_Entry, ventanaP, ajolote, finn, mapache):
     global cont, ventana
     ventana = False
     set_Respuesta(respuesta_Entry.get())
-    root.quit()  # Detener el bucle principal de tkinter
     validarRespuesta(ajolote, finn, mapache)
     if get_error():
         pygame.mixer.Sound(os.path.join("Sounds/Juego", "5.wav")).play()
@@ -80,11 +88,13 @@ def accion_aceptar(respuesta_Entry, root, ajolote, finn, mapache):
         else:
             set_gameOver(True)
     else:
+        pygame.mixer.Sound(os.path.join("Sounds/Juego","6.wav")).play()
         modificarPuntos()
     set_valP(str(get_Puntos()))
     modificarPregunta()
     setTesoro(False)
     cont += 1
+    ventanaP.quit() 
     if cont >= 8:
         set_gameOver(True)
 
@@ -116,11 +126,11 @@ def centrarVentana(root):
 def ventanaPuntos():
     global ventana
     ventana = True
-    root = tk.Tk()
-    root.title("Game Over")
-    root.protocol("WM_DELETE_WINDOW", accionCerrar(root))
+    ventanaPun = tk.Tk()
+    ventanaPun.title("Game Over")
+    ventanaPun.protocol("WM_DELETE_WINDOW", accionCerrar(ventanaPun))
     label = tk.Label(
-        root,
+        ventanaPun,
         text="Fin del juego, obtuviste: " + valP + " puntos",
         font=("Georgia", 8),
         padx=20,
@@ -128,19 +138,19 @@ def ventanaPuntos():
         justify="center",
     )
     label.pack()
-    centrarVentana(root)
-    root.mainloop()
+    centrarVentana(ventanaPun)
+    ventanaPun.mainloop()
 
 
 def mostrarPregunta(ajolote, finn, mapache):
     global ventana
     ventana = True
-    root = tk.Tk()
-    root.title("Pregunta")
-    root.protocol("WM_DELETE_WINDOW", on_cerrar_ventana)
+    ventanaP = tk.Tk()
+    ventanaP.title("Pregunta")
+    ventanaP.protocol("WM_DELETE_WINDOW", on_cerrar_ventana)
     if ajolote:
         label = tk.Label(
-            root,
+            ventanaP,
             text=preguntas_Ajolote[get_numP()],
             font=("Georgia", 8),
             padx=20,
@@ -149,7 +159,7 @@ def mostrarPregunta(ajolote, finn, mapache):
         )
     if finn:
         label = tk.Label(
-            root,
+            ventanaP,
             text=preguntas_Finn[get_numP()],
             font=("Georgia", 8),
             padx=20,
@@ -158,7 +168,7 @@ def mostrarPregunta(ajolote, finn, mapache):
         )
     if mapache:
         label = tk.Label(
-            root,
+            ventanaP,
             text=preguntas_Mapache[get_numP()],
             font=("Georgia", 8),
             padx=20,
@@ -167,50 +177,69 @@ def mostrarPregunta(ajolote, finn, mapache):
         )
     label.pack()
 
-    pregunta_label = tk.Label(root, text="Escribe tu respuesta:")
+    pregunta_label = tk.Label(ventanaP, text="Escribe tu respuesta:")
     pregunta_label.pack()
-    respuesta_Entry = tk.Entry(root)
+    respuesta_Entry = tk.Entry(ventanaP)
     respuesta_Entry.pack()
-    centrarVentana(root)
+    centrarVentana(ventanaP)
     aceptar_button = tk.Button(
-        root,
+        ventanaP,
         text="Aceptar",
-        command=lambda: accion_aceptar(respuesta_Entry, root, ajolote, finn, mapache),
+        command=lambda: accion_aceptar(respuesta_Entry, ventanaP, ajolote, finn, mapache),
     )
     aceptar_button.pack()
-    root.mainloop()
+    ventanaP.mainloop()
 
 
 def mostrarInstruccionesJuego():
-    root = tk.Tk()
-    root.title("Instrucciones")
+    ventanaInJ = tk.Tk()
+    ventanaInstrucciones = ventanaInJ
+    ventanaInJ.title("Instrucciones")
     label = Label(
-        root,
+        ventanaInJ,
         text="Cómo jugar:"
+        "\n\nPara abrir una pregunta debes chocaar con las esferas doradas"
+        "\n\n1: Mover cámara hacia abajo"
+        "\n\n2: Mover cámara hacia arriba"
+        "\n\n+: Zomm in"
+        "\n\n-: Zoom out"
+        "\n\n4:Mover cámara hacia la izquierda"
+        "\n\n3: Mover cámara hacia la derecha"
         "\n\nW=Moverse hacia atrás"
         "\n\nA=Moverse hacia la izquierda"
         "\n\nS=Moverse hacia la adelante"
         "\n\nD= Moverse hacia derecha"
         "\n\nE=Regresar al menú"
         "\n\nTAB= Cambia de nivel (Solo si no se ha comenzado el nivel)"
-        "\n\nEvita las esferas rojas, son Game Over directo",
+        "\n\nEscribe tu respuesta en el espacio en blanco y da click en Aceptar"
+        "\n\nUna vez abierta la pregunta no la podrás cerrar ni interactuar con el personaje!"
+        "\n\nEvita las esferas rojas, son Game Over directo (Salen a partir del nivel 2)",
         font=("Georgia", 8),
         padx=20,
         pady=20,
         justify="center",
     )
     label.pack()
-    centrarVentana(root)
-    root.mainloop()
+    centrarVentana(ventanaInJ)
+    ventanaInJ.mainloop()
 
 
 def mostrarInstruccionesPersonaje(ajolote, finn, mapache):
-    root = tk.Tk()
-    root.title("Instrucciones")
+    global ventanaInstrucciones
+    ventanaInP = tk.Tk()
+    ventanaInstrucciones = ventanaInP
+    ventanaInP.title("Instrucciones")
     if ajolote:
         label = Label(
-            root,
+            ventanaInP,
             text="Posibles movimientos:"
+            "\n\n1: Mover cámara hacia abajo"
+            "\n\n2: Mover cámara hacia arriba"
+            "\n\n+: Zomm in"
+            "\n\n-: Zoom out"
+            "\n\n4:Mover cámara hacia la izquierda"
+            "\n\n3: Mover cámara hacia la derecha"
+            "\n\nTambién puedes usar el mouse para mover la cámara dando click y arrastrando"
             "\n\nC: Caminar"
             "\n\nH: Sorpresa"
             "\n\nA: Mover cola a la derecha"
@@ -226,6 +255,7 @@ def mostrarInstruccionesPersonaje(ajolote, finn, mapache):
             "\n\nK: Mareado"
             "\n\nQ: Créditos"
             "\n\nFlecha Izq y Der cambia de fondo"
+            "\n\nEnter: Selecciona Personaje"
             "\n\nTAB: Cambia personaje",
             font=("Georgia", 8),
             padx=20,
@@ -234,8 +264,15 @@ def mostrarInstruccionesPersonaje(ajolote, finn, mapache):
         )
     elif finn:
         label = Label(
-            root,
+            ventanaInP,
             text="Posibles movimientos:"
+            "\n\n1: Mover cámara hacia abajo"
+            "\n\n2: Mover cámara hacia arriba"
+            "\n\n+: Zomm in"
+            "\n\n-: Zoom out"
+            "\n\n4:Mover cámara hacia la izquierda"
+            "\n\n3: Mover cámara hacia la derecha"
+            "\n\nTambién puedes usar el mouse para mover la cámara dando click y arrastrando"
             "\n\nC: Camina "
             "\n\nS: Salta"
             "\n\nG: Gritar"
@@ -248,6 +285,7 @@ def mostrarInstruccionesPersonaje(ajolote, finn, mapache):
             "\n\nX: Mover pie izquierdo"
             "\n\nY: Mover pie derecho"
             "\n\nQ: Créditos"
+            "\n\nEnter: Selecciona Personaje"
             "\n\nTAB: Cambia personaje",
             font=("Georgia", 8),
             padx=20,
@@ -256,8 +294,15 @@ def mostrarInstruccionesPersonaje(ajolote, finn, mapache):
         )
     elif mapache:
         label = Label(
-            root,
+            ventanaInP,
             text="Posibles movimientos:"
+            "\n\n1: Mover cámara hacia abajo"
+            "\n\n2: Mover cámara hacia arriba"
+            "\n\n+: Zomm in"
+            "\n\n-: Zoom out"
+            "\n\n4:Mover cámara hacia la izquierda"
+            "\n\n3: Mover cámara hacia la derecha"
+            "\n\nTambién puedes usar el mouse para mover la cámara dando click y arrastrando"
             "\n\nO: Original"
             "\n\nC: Chiquito"
             "\n\nR: Levantar Brazo"
@@ -269,6 +314,7 @@ def mostrarInstruccionesPersonaje(ajolote, finn, mapache):
             "\n\nU: Confundido"
             "\n\nFlecha Izq y Der cambia de fondo"
             "\n\nQ: Créditos"
+            "\n\nEnter: Selecciona Personaje"
             "\n\nTAB: Cambia personaje",
             font=("Georgia", 8),
             padx=20,
@@ -277,8 +323,15 @@ def mostrarInstruccionesPersonaje(ajolote, finn, mapache):
         )
     else:
         label = Label(
-            root,
+            ventanaInP,
             text="Seleccionar personaje:"
+            "\n\n1: Mover cámara hacia abajo"
+            "\n\n2: Mover cámara hacia arriba"
+            "\n\n+: Zomm in"
+            "\n\n-: Zoom out"
+            "\n\n4:Mover cámara hacia la izquierda"
+            "\n\n3: Mover cámara hacia la derecha"
+            "\n\nTambién puedes usar el mouse para mover la cámara dando click y arrastrando"
             "\n\n5:Finn el humano"
             "\n\n6:Miguel el Ajolote"
             "\n\n7:Juanito el Mapache"
@@ -290,4 +343,5 @@ def mostrarInstruccionesPersonaje(ajolote, finn, mapache):
             justify="left",
         )
     label.pack()
-    root.mainloop()
+    centrarVentana(ventanaInP)
+    ventanaInP.mainloop()
