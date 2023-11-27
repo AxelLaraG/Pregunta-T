@@ -15,6 +15,10 @@ tesoro = False
 instrucciones = False
 ventanaInstrucciones = tk.Tk()
 
+def getVentInst():
+    global ventanaInstrucciones
+    return ventanaInstrucciones
+
 def getInstrucciones():
     global instrucciones
     return instrucciones
@@ -71,7 +75,8 @@ def run_tkinter(opc, ajolote, finn, mapache):
 
 
 def accionCerrar(root):
-    global ventana
+    global ventana, instrucciones
+    instrucciones = False
     ventana = False
     root.quit()
 
@@ -94,7 +99,7 @@ def accion_aceptar(respuesta_Entry, ventanaP, ajolote, finn, mapache):
     modificarPregunta()
     setTesoro(False)
     cont += 1
-    ventanaP.quit() 
+    ventanaP.quit()
     if cont >= 8:
         set_gameOver(True)
 
@@ -107,7 +112,7 @@ def seleccionNivel(lvl, root):
     global ventana
     ventana = False
     set_lvl(lvl)
-    root.quit()
+    root.destroy()
 
 
 def centrarVentana(root):
@@ -128,7 +133,7 @@ def ventanaPuntos():
     ventana = True
     ventanaPun = tk.Tk()
     ventanaPun.title("Game Over")
-    ventanaPun.protocol("WM_DELETE_WINDOW", accionCerrar(ventanaPun))
+    ventanaPun.protocol("WM_DELETE_WINDOW", lambda: accionCerrar(ventanaPun))
     label = tk.Label(
         ventanaPun,
         text="Fin del juego, obtuviste: " + valP + " puntos",
@@ -192,9 +197,11 @@ def mostrarPregunta(ajolote, finn, mapache):
 
 
 def mostrarInstruccionesJuego():
+    global ventanaInstrucciones
     ventanaInJ = tk.Tk()
-    ventanaInstrucciones = ventanaInJ
     ventanaInJ.title("Instrucciones")
+    ventanaInstrucciones = ventanaInJ
+    ventanaInJ.protocol("WM_DELETE_WINDOW",lambda: accionCerrar(ventanaInstrucciones))
     label = Label(
         ventanaInJ,
         text="Cómo jugar:"
@@ -227,8 +234,9 @@ def mostrarInstruccionesJuego():
 def mostrarInstruccionesPersonaje(ajolote, finn, mapache):
     global ventanaInstrucciones
     ventanaInP = tk.Tk()
-    ventanaInstrucciones = ventanaInP
     ventanaInP.title("Instrucciones")
+    ventanaInstrucciones = ventanaInP
+    ventanaInP.protocol("WM_DELETE_WINDOW",lambda: accionCerrar(ventanaInstrucciones))
     if ajolote:
         label = Label(
             ventanaInP,

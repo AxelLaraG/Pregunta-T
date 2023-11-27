@@ -421,13 +421,13 @@ def inicializarTexturas(fondo_NB, fondo_NL, fondo_NR, fondo_NT, fondo_NBo):
 
 def movPersonaje():
     global p_x, p_y, p_z
-    if keys["W"]:
+    if keys["W"] and p_z > -19:
         p_z -= 0.1
-    if keys["A"]:
+    if keys["A"] and p_x > -19:
         p_x -= 0.1
-    if keys["S"]:
+    if keys["S"] and p_z < 19:
         p_z += 0.1
-    if keys["D"]:
+    if keys["D"] and p_x < 19:
         p_x += 0.1
 
 
@@ -568,9 +568,9 @@ while True:
                     set_x_y2(-3)
                 set_CajaObstaculo(mBall(0.2, 0.2, 0.2, [-20, 0, 0]))
             elif event.key == pygame.K_z:
-                if juego:
+                if juego and not(getInstrucciones()):
                     run_tkinter(1, ajolote, finn, mapache)
-                else:
+                elif not(getInstrucciones()):
                     run_tkinter(0, ajolote, finn, mapache)
             # Menú y personajes
             if not (juego):
@@ -601,7 +601,7 @@ while True:
                 elif event.key == pygame.K_TAB:
                     creditos = False
                     if getInstrucciones():
-                        accionCerrar(ventanaInstrucciones)
+                        accionCerrar(getVentInst())
                     if personaje < 3:
                         pygame.display.set_caption(
                             "Pregunta T      Presiona Z para mostrar instrucciones"
@@ -617,7 +617,7 @@ while True:
                     juego = True
                     creditos = False
                     if getInstrucciones():
-                        accionCerrar(ventanaInstrucciones)
+                        accionCerrar(getVentInst())
                     pygame.display.set_caption(
                         "PreguntaT Presiona Z para instrucciones"
                     )
@@ -647,7 +647,7 @@ while True:
                         else:
                             cont = 4
                     definirFondo()
-                elif event.key >= K_a and event.key <= K_z:
+                elif event.key >= K_a and event.key <= K_z and (finn or ajolote or mapache):
                     if event.key == pygame.K_q:
                         if creditos:
                             creditos = False
